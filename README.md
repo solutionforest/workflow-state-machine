@@ -3,7 +3,6 @@
 A powerful and flexible Laravel workflow state machine library that makes it easy to manage model state transitions, rule validation, and audit tracking.
 
 [![Tests](https://github.com/solutionforest/workflow-state-machine/workflows/Tests/badge.svg)](https://github.com/solutionforest/workflow-state-machine/actions)
-[![Quality](https://img.shields.io/badge/quality-A+-brightgreen.svg?style=flat)](https://github.com/solutionforest/workflow-state-machine)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg?style=flat)](https://phpstan.org/)
 [![Larastan](https://img.shields.io/badge/Larastan-enabled-brightgreen.svg?style=flat)](https://github.com/larastan/larastan)
 [![PHP Version](https://img.shields.io/badge/php-%5E8.2-787CB5.svg?style=flat)](https://php.net)
