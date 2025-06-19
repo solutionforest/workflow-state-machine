@@ -126,7 +126,10 @@ $workflow = Workflow::create([
     'ending_status' => 'completed',
 ]);
 
-// Create workflow processes with workflow_id relation
+// If 'auto_create_processes' is enabled in config, processes will be automatically 
+// created based on the status array (excluding 'rejected' and 'cancelled')
+// Otherwise, manually create workflow processes:
+
 $process1 = WorkflowProcess::create([
     'workflow_id' => $workflow->id,
     'name' => 'submit_for_review',
@@ -149,6 +152,32 @@ $process2 = WorkflowProcess::create([
 $task = Task::create(['title' => 'New Task']);
 $task->workflow()->associate($workflow);
 $task->save();
+```
+
+### Auto-Create Processes Feature
+
+When `auto_create_processes` is enabled in the configuration, the library will automatically create workflow processes based on the status array when a workflow is created:
+
+```php
+// Enable auto-creation in config/workflow-state-machine.php
+'auto_create_processes' => true,
+
+// With this enabled, creating a workflow will automatically generate processes:
+$workflow = Workflow::create([
+    'name' => 'task_approval_workflow',
+    'description' => 'Task approval workflow',
+    'starting_status' => 'draft',
+    'ending_status' => 'completed',
+]);
+
+// Automatically creates processes for status transitions:
+// draft → pending → in_progress → review → approved → completed
+// (excluding 'rejected' and 'cancelled' from the flow)
+
+// The auto-created processes will have:
+// - Sequential ordering (1, 2, 3, ...)
+// - Generated names based on status transitions
+// - auto_transition set to false by default
 ```
 
 ### 5. Define Rules and Sample Rule Class
@@ -326,6 +355,9 @@ return [
     'enable_auto_transition' => true,
     
     'auto_transition_delay' => 0, // seconds
+    
+    // Auto-create processes based on status array when workflow is created
+    'auto_create_processes' => false, // default: false
     
     'events' => [
         'auto_check_on_model_update' => true,
