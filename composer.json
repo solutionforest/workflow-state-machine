@@ -34,7 +34,6 @@
     },
     "scripts": {
         "test": "pest",
-        "test-coverage": "pest --coverage",
         "pint": "pint",
         "phpstan": "phpstan analyse --memory-limit=256M",
         "larastan": "phpstan analyse --memory-limit=256M"
