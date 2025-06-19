@@ -146,9 +146,6 @@ echo "Available transitions: " . implode(', ', $availableTransitions) . "\n";
 # Run all tests
 composer test
 
-# Run with coverage
-composer test-coverage
-
 # Run code formatting
 composer pint
 
