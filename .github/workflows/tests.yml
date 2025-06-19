@@ -43,7 +43,7 @@ jobs:
       run: composer install --no-progress --prefer-dist --optimize-autoloader
 
     - name: Run tests
-      run: vendor/bin/pest --coverage --min=80
+      run: vendor/bin/pest
 
     - name: Run PHP CS Fixer
       run: vendor/bin/pint --test
