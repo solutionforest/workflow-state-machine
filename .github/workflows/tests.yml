@@ -53,7 +53,7 @@ jobs:
       run: ls -la ./vendor/bin/pest && ./vendor/bin/pest --version
 
     - name: Run tests
-      run: ./vendor/bin/pest --colors=always
+      run: ./vendor/bin/pest tests --colors=always
 
     - name: Run PHP CS Fixer
       run: ./vendor/bin/pint --test
