@@ -2,7 +2,7 @@ name: Tests
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -43,10 +43,10 @@ jobs:
       run: composer install --no-progress --prefer-dist --optimize-autoloader
 
     - name: Run tests
-      run: vendor/bin/pest
+      run: ./vendor/bin/pest --colors=always
 
     - name: Run PHP CS Fixer
-      run: vendor/bin/pint --test
+      run: ./vendor/bin/pint --test
 
     - name: Run PHPStan
-      run: vendor/bin/phpstan analyse --memory-limit=256M
+      run: ./vendor/bin/phpstan analyse --no-progress --memory-limit=256M
