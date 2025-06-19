@@ -88,13 +88,13 @@ Once tagged, users can install specific versions:
 
 ```bash
 # Install latest version
-composer require your-vendor/workflow-state-machine
+composer require solution-forest/workflow-state-machine
 
 # Install specific version
-composer require your-vendor/workflow-state-machine:^1.0
+composer require solution-forest/workflow-state-machine:^1.0
 
 # Install exact version
-composer require your-vendor/workflow-state-machine:1.0.0
+composer require solution-forest/workflow-state-machine:1.0.0
 ```
 
 ## Version History Suggestions

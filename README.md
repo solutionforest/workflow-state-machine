@@ -2,7 +2,7 @@
 
 A powerful and flexible Laravel workflow state machine library that makes it easy to manage model state transitions, rule validation, and audit tracking.
 
-[![Tests](https://github.com/your-username/workflow-state-machine/workflows/tests/badge.svg)](https://github.com/your-username/workflow-state-machine/actions)
+[![Tests](https://github.com/solution-forest/workflow-state-machine/workflows/tests/badge.svg)](https://github.com/solution-forest/workflow-state-machine/actions)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg?style=flat)](https://phpstan.org/)
 [![Larastan](https://img.shields.io/badge/Larastan-enabled-brightgreen.svg?style=flat)](https://github.com/larastan/larastan)
 [![PHP Version](https://img.shields.io/badge/php-%5E8.2-787CB5.svg?style=flat)](https://php.net)
@@ -33,7 +33,7 @@ A powerful and flexible Laravel workflow state machine library that makes it eas
 ### Installation
 
 ```bash
-composer require your-vendor/workflow-state-machine
+composer require solution-forest/workflow-state-machine
 ```
 
 ### Publish Configuration
@@ -496,8 +496,8 @@ MIT License. See [LICENSE](LICENSE) file for details.
 For questions or suggestions:
 
 1. Check the [documentation](docs/)
-2. Search [existing issues](https://github.com/your-username/workflow-state-machine/issues)
-3. Create a new [Issue](https://github.com/your-username/workflow-state-machine/issues/new)
+2. Search [existing issues](https://github.com/solution-forest/workflow-state-machine/issues)
+3. Create a new [Issue](https://github.com/solution-forest/workflow-state-machine/issues/new)
 
 ---
 

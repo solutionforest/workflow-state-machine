@@ -51,11 +51,11 @@ git push origin :refs/tags/v1.0.0
 
 ```bash
 # Latest version
-composer require your-vendor/workflow-state-machine
+composer require solution-forest/workflow-state-machine
 
 # Specific major version
-composer require your-vendor/workflow-state-machine:^1.0
+composer require solution-forest/workflow-state-machine:^1.0
 
 # Exact version
-composer require your-vendor/workflow-state-machine:1.0.0
+composer require solution-forest/workflow-state-machine:1.0.0
 ```

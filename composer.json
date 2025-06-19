@@ -1,5 +1,5 @@
 {
-    "name": "your-vendor/workflow-state-machine",
+    "name": "solution-forest/workflow-state-machine",
     "description": "A powerful and flexible Laravel workflow state machine library",
     "type": "library",
     "license": "MIT",
@@ -16,8 +16,8 @@
     },
     "authors": [
         {
-            "name": "Your Name",
-            "email": "your.email@example.com"
+            "name": "Solution Forest",
+            "email": "info@solutionforest.net"
         }
     ],
     "require": {
