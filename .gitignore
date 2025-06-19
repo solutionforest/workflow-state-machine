@@ -1,0 +1,15 @@
+/vendor/
+/node_modules/
+/.phpunit.cache/
+/phpunit.xml
+/phpstan.neon
+/.idea/
+/.vscode/
+/.DS_Store
+/Thumbs.db
+/coverage/
+/.env
+/.env.backup
+/.phpunit.result.cache
+/composer.phar
+/auth.json

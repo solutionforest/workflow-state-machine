@@ -1,0 +1,57 @@
+{
+    "name": "your-vendor/workflow-state-machine",
+    "description": "A powerful and flexible Laravel workflow state machine library",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "WorkflowStateMachine\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WorkflowStateMachine\\Tests\\": "tests/",
+            "Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Your Name",
+            "email": "your.email@example.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^11.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^2.11",
+        "laravel/pint": "^1.0",
+        "orchestra/testbench": "^9.0",
+        "pestphp/pest": "^2.0",
+        "pestphp/pest-plugin-laravel": "^2.0",
+        "phpstan/phpstan": "^1.10"
+    },
+    "scripts": {
+        "test": "pest",
+        "test-coverage": "pest --coverage",
+        "pint": "pint",
+        "phpstan": "phpstan analyse --memory-limit=256M",
+        "larastan": "phpstan analyse --memory-limit=256M"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "WorkflowStateMachine\\WorkflowStateMachineServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

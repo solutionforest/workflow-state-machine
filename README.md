@@ -4,8 +4,9 @@ A powerful and flexible Laravel workflow state machine library that makes it eas
 
 [![Tests](https://github.com/your-username/workflow-state-machine/workflows/tests/badge.svg)](https://github.com/your-username/workflow-state-machine/actions)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg?style=flat)](https://phpstan.org/)
-[![PHP Version](https://img.shields.io/badge/php-%5E8.1-787CB5.svg?style=flat)](https://php.net)
-[![Laravel Version](https://img.shields.io/badge/laravel-%5E10.0-FF2D20.svg?style=flat)](https://laravel.com)
+[![Larastan](https://img.shields.io/badge/Larastan-enabled-brightgreen.svg?style=flat)](https://github.com/larastan/larastan)
+[![PHP Version](https://img.shields.io/badge/php-%5E8.2-787CB5.svg?style=flat)](https://php.net)
+[![Laravel Version](https://img.shields.io/badge/laravel-%5E11.0-FF2D20.svg?style=flat)](https://laravel.com)
 
 ## Features
 
@@ -22,7 +23,7 @@ A powerful and flexible Laravel workflow state machine library that makes it eas
 
 ### 🔧 Technical Features
 - **High Test Coverage**: Using Pest testing framework
-- **Code Quality**: Formatted with Pint and PHPStan Level 5 static analysis
+- **Code Quality**: Formatted with Pint and Larastan (Laravel-optimized PHPStan) Level 5 static analysis
 - **Modular Design**: Flexible Trait system
 - **Database Optimized**: Efficient polymorphic relationship design
 - **Laravel Events Integration**: Automatic transition triggers on model updates
@@ -461,18 +462,30 @@ composer test
 # Run code formatting
 composer pint
 
-# Run static analysis
+# Run static analysis with Larastan
+composer larastan
+
+# Or run PHPStan directly
 composer phpstan
+
+# Run PHPStan manually with memory limit
+vendor/bin/phpstan analyse --memory-limit=256M
 ```
 
 ## Requirements
 
-- PHP ^8.1
-- Laravel ^10.0
+- PHP ^8.2
+- Laravel ^11.0
+
+## Versioning
+
+This project follows [Semantic Versioning](https://semver.org/). Versions are tagged and released through GitHub.
+
+For version history, see [CHANGELOG.md](CHANGELOG.md).
 
 ## Contributing
 
-Pull requests and issues are welcome!
+Pull requests and issues are welcome! See [VERSION_RELEASE.md](VERSION_RELEASE.md) for release procedures.
 
 ## License
 
