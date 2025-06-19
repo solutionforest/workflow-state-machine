@@ -39,14 +39,24 @@ jobs:
         key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
         restore-keys: ${{ runner.os }}-composer-
 
+    - name: Cache vendor directory
+      uses: actions/cache@v4
+      with:
+        path: vendor
+        key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-vendor-
+
     - name: Install Composer dependencies
       run: composer install --no-progress --prefer-dist --optimize-autoloader
 
+    - name: Check Pest binary
+      run: ls -la ./vendor/bin/pest && ./vendor/bin/pest --version
+
     - name: Run tests
-      run: ./vendor/bin/pest --colors=always
+      run: composer test
 
     - name: Run PHP CS Fixer
-      run: ./vendor/bin/pint --test
+      run: composer pint
 
     - name: Run PHPStan
-      run: ./vendor/bin/phpstan analyse --no-progress --memory-limit=256M
+      run: composer phpstan
