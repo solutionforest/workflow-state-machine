@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Progress tracking with percentage and roadmap
 - Complete test coverage using Pest framework
 - Code quality assurance with Laravel Pint and Larastan
-- Support for Laravel 11.x and PHP 8.2+
+- Support for Laravel 11.x & 12.x and PHP 8.2+
 
 ### Features
 - `HasWorkflowStates` trait for models
