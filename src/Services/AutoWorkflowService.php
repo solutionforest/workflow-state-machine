@@ -29,8 +29,8 @@ class AutoWorkflowService
 
         $workflowName = config('workflow-state-machine.auto_workflow_name', 'Default Workflow');
 
-        // Get default statuses
-        $statuses = config('workflow-state-machine.status', ['draft' => 'Draft']);
+        // Get default statuses from model or config
+        $statuses = method_exists($model, 'getStatusArray') ? $model->getStatusArray() : config('workflow-state-machine.status', ['draft' => 'Draft']);
         $firstStatus = array_key_first($statuses);
         $lastStatus = array_key_last($statuses);
 
@@ -45,9 +45,9 @@ class AutoWorkflowService
         ]);
 
         // Set initial status if model doesn't have one
-        if (! $model->getAttribute('status')) {
-            $firstStatus = array_key_first(config('workflow-state-machine.status', ['draft' => 'Draft']));
-            $model->update(['status' => $firstStatus]);
+        $statusColumn = method_exists($model, 'getStatusColumnName') ? $model->getStatusColumnName() : 'status';
+        if (! $model->getAttribute($statusColumn)) {
+            $model->update([$statusColumn => $firstStatus]);
         }
 
         return $workflow;

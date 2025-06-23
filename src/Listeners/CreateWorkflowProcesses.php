@@ -16,7 +16,28 @@ class CreateWorkflowProcesses
             return;
         }
 
-        $statuses = \config('workflow-state-machine.status', []);
+        // Skip if workflow already has processes
+        if ($workflow->processes()->exists()) {
+            return;
+        }
+
+        // Get status array from the workflowable model if available, otherwise use config
+        $statuses = [];
+        if ($workflow->workflowable_type && $workflow->workflowable_id) {
+            $modelClass = $workflow->workflowable_type;
+            if (class_exists($modelClass)) {
+                $model = $modelClass::find($workflow->workflowable_id);
+                if ($model && method_exists($model, 'getStatusArray')) {
+                    $statuses = $model->getStatusArray();
+                }
+            }
+        }
+
+        // Fallback to config if no model-specific status array found
+        if (empty($statuses)) {
+            $statuses = \config('workflow-state-machine.status', []);
+        }
+
         $excludedStatuses = ['rejected', 'cancelled'];
 
         // Filter out excluded statuses

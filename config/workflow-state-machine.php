@@ -22,6 +22,9 @@ return [
 
     'morph_name' => 'workflowable',
 
+    // Default status column name for models
+    'status_column' => 'status',
+
     'enable_audit_log' => true,
     'enable_rollback' => true,
     'enable_auto_transition' => true,

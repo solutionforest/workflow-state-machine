@@ -112,6 +112,95 @@ return [
 ];
 ```
 
+### Custom Status Column Name
+
+By default, the library expects your models to have a `status` column. You can customize this in two ways:
+
+#### 1. Model-level customization (recommended)
+
+Define a `$status_column` property in your model:
+
+```php
+use WorkflowStateMachine\Traits\HasWorkflowStates;
+
+class Order extends Model
+{
+    use HasWorkflowStates;
+    
+    protected $fillable = ['customer_name', 'order_state'];
+    
+    // Customize the status column name for this model
+    protected $status_column = 'order_state';
+}
+```
+
+#### 2. Global configuration
+
+Set the default status column name in `config/workflow-state-machine.php`:
+
+```php
+return [
+    // Default status column name for all models
+    'status_column' => 'state', // default: 'status'
+    
+    // Other configurations...
+];
+```
+
+**Note:** Model-level `$status_column` property takes precedence over the global config setting.
+
+### Custom Status Array
+
+You can also define custom status arrays at the model level, allowing different models to have different workflow statuses:
+
+#### Model-level status array (recommended for model-specific workflows)
+
+Define a `$status_array` property in your model:
+
+```php
+use WorkflowStateMachine\Traits\HasWorkflowStates;
+
+class Order extends Model
+{
+    use HasWorkflowStates;
+    
+    protected $fillable = ['customer_name', 'order_status'];
+    protected $status_column = 'order_status';
+    
+    // Custom status array for this model
+    protected $status_array = [
+        'pending' => 'Pending Payment',
+        'paid' => 'Payment Received', 
+        'processing' => 'Processing Order',
+        'shipped' => 'Shipped',
+        'delivered' => 'Delivered',
+        'cancelled' => 'Cancelled',
+    ];
+}
+```
+
+#### Benefits of model-level status arrays:
+
+1. **Different workflows for different models**: Orders can have different statuses than Tasks
+2. **Auto-workflow creation**: Uses model-specific statuses for starting/ending status
+3. **Auto-process generation**: Creates processes based on model's status array
+4. **Flexible configuration**: Each model can define its own workflow logic
+
+#### Fallback behavior:
+
+- **Model status array** → **Global config status array** → **Hardcoded default**
+
+```php
+// This model will use the global config status array
+class Task extends Model 
+{
+    use HasWorkflowStates;
+    
+    protected $fillable = ['title', 'status'];
+    // No custom $status_array, uses config
+}
+```
+
 ### 4. Create Workflows and Processes
 
 ```php
@@ -287,6 +376,7 @@ To disable auto-creation for specific models while keeping it enabled globally, 
 | `auto_create_workflow` | boolean | `false` | Enable/disable automatic workflow creation |
 | `auto_workflow_name` | string | `'Default Workflow'` | Default name for auto-created workflows |
 | `auto_create_processes` | boolean | `false` | Auto-create processes from status config |
+| `status_column` | string | `'status'` | Default status column name for models |
 
 ### 5. Define Rules and Sample Rule Class
 

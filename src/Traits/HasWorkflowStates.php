@@ -11,6 +11,59 @@ use WorkflowStateMachine\Models\WorkflowProcess;
 
 trait HasWorkflowStates
 {
+    /**
+     * Get the status column name for this model
+     */
+    public function getStatusColumnName(): string
+    {
+        // Check if model has custom status column defined
+        if (property_exists($this, 'status_column') && ! empty($this->status_column)) {
+            return $this->status_column;
+        }
+
+        // Fallback to config default, with hardcoded fallback
+        return config('workflow-state-machine.status_column') ?: 'status';
+    }
+
+    /**
+     * Get the current status of the model
+     */
+    public function getCurrentStatus(): ?string
+    {
+        return $this->getAttribute($this->getStatusColumnName());
+    }
+
+    /**
+     * Set the status of the model
+     */
+    public function setStatus(string $status): void
+    {
+        $this->setAttribute($this->getStatusColumnName(), $status);
+    }
+
+    /**
+     * Get the status array for this model
+     */
+    public function getStatusArray(): array
+    {
+        // Check if model has custom status array defined
+        if (property_exists($this, 'status_array') && ! empty($this->status_array)) {
+            return $this->status_array;
+        }
+
+        // Fallback to config default
+        return config('workflow-state-machine.status') ?: [
+            'draft' => 'Draft',
+            'pending' => 'Pending',
+            'in_progress' => 'In Progress',
+            'review' => 'Under Review',
+            'approved' => 'Approved',
+            'rejected' => 'Rejected',
+            'completed' => 'Completed',
+            'cancelled' => 'Cancelled',
+        ];
+    }
+
     public function workflows(): MorphMany
     {
         $morphName = function_exists('config') && config('workflow-state-machine.morph_name')
@@ -36,7 +89,7 @@ trait HasWorkflowStates
             return false;
         }
 
-        $process = $this->getProcessForTransition($this->status, $toStatus);
+        $process = $this->getProcessForTransition($this->getCurrentStatus(), $toStatus);
 
         if (! $process) {
             return false;
@@ -59,10 +112,11 @@ trait HasWorkflowStates
             return false;
         }
 
-        $fromStatus = $this->status;
+        $fromStatus = $this->getCurrentStatus();
 
         // Update the status
-        $this->update(['status' => $toStatus]);
+        $statusColumn = $this->getStatusColumnName();
+        $this->update([$statusColumn => $toStatus]);
 
         // Log the change
         $enableAuditLog = function_exists('config') ? config('workflow-state-machine.enable_audit_log', true) : true;
@@ -93,7 +147,7 @@ trait HasWorkflowStates
             return false;
         }
 
-        $process = $this->getProcessForTransition($this->status, $nextStatus);
+        $process = $this->getProcessForTransition($this->getCurrentStatus(), $nextStatus);
 
         if (! $process || ! $process->auto_transition) {
             return false;
@@ -104,12 +158,12 @@ trait HasWorkflowStates
 
     public function getNextStatus(): ?string
     {
-        return $this->workflow?->getNextStatus($this->status);
+        return $this->workflow?->getNextStatus($this->getCurrentStatus());
     }
 
     public function getPreviousStatus(): ?string
     {
-        return $this->workflow?->getPreviousStatus($this->status);
+        return $this->workflow?->getPreviousStatus($this->getCurrentStatus());
     }
 
     public function getCurrentWorkflowStep(): ?int
@@ -120,7 +174,7 @@ trait HasWorkflowStates
 
         $roadmap = $this->workflow->getStatusRoadmap();
 
-        return array_search($this->status, $roadmap) + 1;
+        return array_search($this->getCurrentStatus(), $roadmap) + 1;
     }
 
     public function canProceedToNextStep($user = null): bool
@@ -141,14 +195,14 @@ trait HasWorkflowStates
         }
 
         $roadmap = $this->workflow->getStatusRoadmap();
-        $currentIndex = array_search($this->status, $roadmap);
+        $currentIndex = array_search($this->getCurrentStatus(), $roadmap);
 
         return [
             'current_step' => $currentIndex + 1,
             'total_steps' => count($roadmap),
             'progress_percentage' => (int) round((($currentIndex + 1) / count($roadmap)) * 100),
             'roadmap' => $roadmap,
-            'current_status' => $this->status,
+            'current_status' => $this->getCurrentStatus(),
         ];
     }
 
@@ -170,10 +224,11 @@ trait HasWorkflowStates
             return false;
         }
 
-        $fromStatus = $this->status;
+        $fromStatus = $this->getCurrentStatus();
 
         // Update the status
-        $this->update(['status' => $toStatus]);
+        $statusColumn = $this->getStatusColumnName();
+        $this->update([$statusColumn => $toStatus]);
 
         // Log the rollback
         $enableAuditLog = function_exists('config') ? config('workflow-state-machine.enable_audit_log', true) : true;
@@ -202,7 +257,7 @@ trait HasWorkflowStates
         }
 
         $availableProcesses = $this->workflow->processes()
-            ->where('from_status', $this->status)
+            ->where('from_status', $this->getCurrentStatus())
             ->get();
 
         return $availableProcesses->filter(function ($process) use ($user) {
