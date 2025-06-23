@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string $to_status
  * @property int $order
  * @property bool $auto_transition
+ * @property bool $completed
  * @property string|null $description
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -28,12 +29,18 @@ class WorkflowProcess extends Model
         'to_status',
         'order',
         'auto_transition',
+        'completed',
         'description',
     ];
 
     protected $casts = [
         'auto_transition' => 'boolean',
+        'completed' => 'boolean',
         'order' => 'integer',
+    ];
+
+    protected $attributes = [
+        'completed' => false,
     ];
 
     public function __construct(array $attributes = [])

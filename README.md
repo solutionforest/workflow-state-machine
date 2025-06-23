@@ -227,6 +227,7 @@ $process1 = WorkflowProcess::create([
     'to_status' => 'pending',
     'order' => 1,
     'auto_transition' => true,
+    'completed' => false,
 ]);
 
 $process2 = WorkflowProcess::create([
@@ -236,6 +237,7 @@ $process2 = WorkflowProcess::create([
     'to_status' => 'approved',
     'order' => 2,
     'auto_transition' => false,
+    'completed' => false,
 ]);
 
 // Assign workflow to a model instance via polymorphic relationship
@@ -243,6 +245,19 @@ $task = Task::create(['title' => 'New Task']);
 $task->workflow()->associate($workflow);
 $task->save();
 ```
+
+### WorkflowProcess Properties
+
+Each `WorkflowProcess` has the following properties:
+
+- `workflow_id`: The ID of the workflow this process belongs to
+- `name`: A descriptive name for the process (optional)
+- `from_status`: The status this process transitions from
+- `to_status`: The status this process transitions to
+- `order`: The order of this process in the workflow sequence
+- `auto_transition`: Whether this process should automatically transition when triggered
+- `completed`: Whether this process has been completed (useful for tracking progress)
+- `description`: A detailed description of what this process does (optional)
 
 ### Auto-Create Processes Feature
 
@@ -268,6 +283,7 @@ $workflow = Workflow::create([
 // - Sequential ordering (1, 2, 3, ...)
 // - Generated names based on status transitions
 // - auto_transition set to false by default
+// - completed set to false by default
 ```
 
 ## Auto-Create Workflow Feature

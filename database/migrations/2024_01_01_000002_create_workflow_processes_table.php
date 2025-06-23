@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('to_status');
             $table->integer('order')->default(0);
             $table->boolean('auto_transition')->default(false);
+            $table->boolean('completed')->default(false);
             $table->text('description')->nullable();
             $table->timestamps();
 

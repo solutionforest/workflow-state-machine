@@ -65,6 +65,7 @@ class CreateWorkflowProcesses
                 'to_status' => $toStatus,
                 'order' => $order++,
                 'auto_transition' => false,
+                'completed' => false,
                 'description' => "Auto-generated process for {$fromStatus} to {$toStatus} transition",
             ]);
         }

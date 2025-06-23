@@ -118,6 +118,12 @@ trait HasWorkflowStates
         $statusColumn = $this->getStatusColumnName();
         $this->update([$statusColumn => $toStatus]);
 
+        // Mark the corresponding WorkflowProcess as completed
+        $process = $this->getProcessForTransition($fromStatus, $toStatus);
+        if ($process) {
+            $process->update(['completed' => true]);
+        }
+
         // Log the change
         $enableAuditLog = function_exists('config') ? config('workflow-state-machine.enable_audit_log', true) : true;
         if ($enableAuditLog) {
