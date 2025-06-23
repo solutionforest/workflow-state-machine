@@ -31,7 +31,7 @@ This badge will automatically show:
 
 ### PHP Version Badge (Static)
 ```markdown
-[![PHP Version](https://img.shields.io/badge/php-%5E8.2-787CB5.svg?style=flat)](https://php.net)
+[![PHP Version](https://img.shields.io/badge/php-8.2%20%7C%208.3%20%7C%208.4-787CB5.svg?style=flat)](https://php.net)
 ```
 
 ### Laravel Version Badge (Static)

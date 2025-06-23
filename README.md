@@ -5,8 +5,8 @@ A powerful and flexible Laravel workflow state machine library that makes it eas
 [![Tests](https://github.com/solutionforest/workflow-state-machine/workflows/Tests/badge.svg)](https://github.com/solutionforest/workflow-state-machine/actions)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg?style=flat)](https://phpstan.org/)
 [![Larastan](https://img.shields.io/badge/Larastan-enabled-brightgreen.svg?style=flat)](https://github.com/larastan/larastan)
-[![PHP Version](https://img.shields.io/badge/php-%5E8.2-787CB5.svg?style=flat)](https://php.net)
-[![Laravel Version](https://img.shields.io/badge/laravel-%5E11.0-FF2D20.svg?style=flat)](https://laravel.com)
+[![PHP Version](https://img.shields.io/badge/php-8.2%20%7C%208.3%20%7C%208.4-787CB5.svg?style=flat)](https://php.net)
+[![Laravel Version](https://img.shields.io/badge/laravel-%5E11.0%20%7C%20%5E12.0-FF2D20.svg?style=flat)](https://laravel.com)
 
 ## Features
 
