@@ -31,6 +31,10 @@ return [
     // Auto-create processes based on status array when workflow is created
     'auto_create_processes' => false, // default: false
 
+    // Auto-create workflow for models when they are created
+    'auto_create_workflow' => false, // default: false
+    'auto_workflow_name' => 'Default Workflow', // default workflow name
+
     'events' => [
         'auto_check_on_model_update' => true,
         'auto_check_on_relation_update' => false,

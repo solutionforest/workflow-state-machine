@@ -2,10 +2,29 @@
 
 namespace WorkflowStateMachine\Observers;
 
+use WorkflowStateMachine\Services\AutoWorkflowService;
 use WorkflowStateMachine\Traits\HasWorkflowStates;
 
 class WorkflowModelObserver
 {
+    public function created($eventName, array $data): void
+    {
+        // Extract model from event data
+        $model = $data[0] ?? null;
+
+        if (! $model) {
+            return;
+        }
+
+        // Check if model uses workflow states
+        if (! in_array(HasWorkflowStates::class, class_uses_recursive($model))) {
+            return;
+        }
+
+        // Auto-create workflow for the model
+        AutoWorkflowService::createWorkflowForModel($model);
+    }
+
     public function updated($eventName, array $data): void
     {
         // Extract model from event data

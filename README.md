@@ -181,6 +181,113 @@ $workflow = Workflow::create([
 // - auto_transition set to false by default
 ```
 
+## Auto-Create Workflow Feature
+
+This feature allows workflows to be automatically created when models with the `HasWorkflowStates` trait are created.
+
+### Configuration
+
+Enable auto-creation in your config file:
+
+```php
+// config/workflow-state-machine.php
+return [
+    // ... other config options ...
+    
+    // Auto-create workflow for models when they are created
+    'auto_create_workflow' => true, // default: false
+    'auto_workflow_name' => 'Default Workflow', // default workflow name
+    
+    // Auto-create processes based on status array when workflow is created
+    'auto_create_processes' => true, // default: false
+];
+```
+
+### Usage
+
+Once enabled, any model that uses the `HasWorkflowStates` trait will automatically get a workflow created when the model is saved for the first time:
+
+```php
+use WorkflowStateMachine\Traits\HasWorkflowStates;
+
+class Task extends Model
+{
+    use HasWorkflowStates;
+    
+    protected $fillable = ['title', 'description', 'status'];
+}
+
+// Enable auto-creation in config
+config(['workflow-state-machine.auto_create_workflow' => true]);
+
+// Create a new task - workflow will be auto-created
+$task = Task::create([
+    'title' => 'Complete project',
+    'description' => 'Finish the project by Friday'
+]);
+
+// The task now has a workflow automatically assigned
+echo $task->workflow->name; // "Default Workflow"
+echo $task->status; // "draft" (first status from config)
+```
+
+### Auto-Creation Features
+
+1. **Automatic Workflow Creation**: When a model is created, a workflow is automatically generated if:
+   - The model uses the `HasWorkflowStates` trait
+   - `auto_create_workflow` is enabled in config
+   - The model doesn't already have a workflow
+
+2. **Process Auto-Generation**: If `auto_create_processes` is enabled, the workflow will automatically create processes based on the status configuration via the `WorkflowCreated` event:
+
+```php
+// config/workflow-state-machine.php
+'status' => [
+    'draft' => 'Draft',
+    'pending' => 'Pending',
+    'in_progress' => 'In Progress',
+    'review' => 'Under Review',
+    'approved' => 'Approved',
+    'completed' => 'Completed',
+],
+```
+
+3. **Initial Status Assignment**: If the model doesn't have a status when created, it will be automatically set to the first status in the configuration (typically 'draft').
+
+4. **No Duplicate Creation**: The system checks if a model already has a workflow and won't create duplicates.
+
+### Observer Events
+
+The auto-creation is handled by the `WorkflowModelObserver` which listens for Eloquent `created` events. This ensures workflows are created immediately when models are saved to the database.
+
+### Manual Control
+
+You can also manually create workflows using the service:
+
+```php
+use WorkflowStateMachine\Services\AutoWorkflowService;
+
+$workflow = AutoWorkflowService::createWorkflowForModel($model);
+```
+
+### Best Practices
+
+1. **Enable selectively**: Only enable auto-creation for models that truly need workflows
+2. **Configure statuses**: Ensure your status configuration matches your business needs
+3. **Testing**: Always test auto-creation in your test environment first
+
+### Disabling Auto-Creation
+
+To disable auto-creation for specific models while keeping it enabled globally, you can override the observer behavior or check model-specific conditions in your implementation.
+
+### Configuration Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `auto_create_workflow` | boolean | `false` | Enable/disable automatic workflow creation |
+| `auto_workflow_name` | string | `'Default Workflow'` | Default name for auto-created workflows |
+| `auto_create_processes` | boolean | `false` | Auto-create processes from status config |
+
 ### 5. Define Rules and Sample Rule Class
 
 Create custom rule classes that implement the rule interface:

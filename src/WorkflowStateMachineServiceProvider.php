@@ -36,7 +36,11 @@ class WorkflowStateMachineServiceProvider extends ServiceProvider
         // Register event listeners
         Event::listen(WorkflowCreated::class, CreateWorkflowProcesses::class);
 
-        // Register model observer for auto-transition events
+        // Register model observer for auto-creation and auto-transition events
+        if (config('workflow-state-machine.auto_create_workflow', false)) {
+            Event::listen('eloquent.created: *', [WorkflowModelObserver::class, 'created']);
+        }
+
         if (config('workflow-state-machine.events.auto_check_on_model_update')) {
             Event::listen('eloquent.updated: *', [WorkflowModelObserver::class, 'updated']);
         }

@@ -27,6 +27,8 @@ class Workflow extends Model
         'starting_status',
         'ending_status',
         'is_active',
+        'workflowable_type',
+        'workflowable_id',
     ];
 
     protected $casts = [
