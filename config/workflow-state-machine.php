@@ -27,7 +27,7 @@ return [
 
     'enable_audit_log' => true,
     'enable_rollback' => true,
-    'enable_auto_transition' => true,
+    'enable_auto_transition' => false, // default: false
 
     'auto_transition_delay' => 0, // seconds
 
@@ -37,9 +37,4 @@ return [
     // Auto-create workflow for models when they are created
     'auto_create_workflow' => false, // default: false
     'auto_workflow_name' => 'Default Workflow', // default workflow name
-
-    'events' => [
-        'auto_check_on_model_update' => true,
-        'auto_check_on_relation_update' => false,
-    ],
 ];

@@ -4,6 +4,7 @@ namespace WorkflowStateMachine;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use WorkflowStateMachine\Console\Commands\MakeWorkflowRuleCommand;
 use WorkflowStateMachine\Console\Commands\WorkflowInstallCommand;
 use WorkflowStateMachine\Events\WorkflowCreated;
 use WorkflowStateMachine\Listeners\CreateWorkflowProcesses;
@@ -30,6 +31,7 @@ class WorkflowStateMachineServiceProvider extends ServiceProvider
 
             $this->commands([
                 WorkflowInstallCommand::class,
+                MakeWorkflowRuleCommand::class,
             ]);
         }
 
@@ -41,7 +43,8 @@ class WorkflowStateMachineServiceProvider extends ServiceProvider
             Event::listen('eloquent.created: *', [WorkflowModelObserver::class, 'created']);
         }
 
-        if (config('workflow-state-machine.events.auto_check_on_model_update')) {
+        // Register updated listener only if auto-transition is enabled
+        if (config('workflow-state-machine.enable_auto_transition', false)) {
             Event::listen('eloquent.updated: *', [WorkflowModelObserver::class, 'updated']);
         }
     }

@@ -396,6 +396,57 @@ To disable auto-creation for specific models while keeping it enabled globally, 
 
 ### 5. Define Rules and Sample Rule Class
 
+#### Creating Rules with Artisan Command
+
+The quickest way to create workflow rules is using the `workflow:make-rule` command:
+
+```bash
+# Create a simple rule class
+php artisan workflow:make-rule ApprovalRule
+
+# Create a rule with custom description
+php artisan workflow:make-rule DocumentValidation --description="Validates document completeness before approval"
+
+# Create an inactive rule
+php artisan workflow:make-rule PendingValidation --active=false
+
+# Create a rule without database insertion
+php artisan workflow:make-rule TestRule --no-database
+```
+
+**Command Options:**
+- `name` (required): The name of the rule class
+- `--description`: Description of the rule (optional)
+- `--active`: Whether the rule is active by default (default: true)
+- `--no-database`: Skip inserting the rule into the database
+
+The command generates a rule class in `app/Rules/` that implements the `WorkflowRuleContract`:
+
+```php
+<?php
+
+namespace App\Rules;
+
+use WorkflowStateMachine\Contracts\WorkflowRuleContract;
+use WorkflowStateMachine\Models\WorkflowProcess;
+
+class CustomRule implements WorkflowRuleContract
+{
+    public function handle($model, WorkflowProcess $process, $user): bool
+    {
+        // Your business logic here
+        return true;
+    }
+
+    public function getMessage(): string
+    {
+        return 'Transition is not allowed by CustomRule.';
+    }
+}
+```
+
+#### Manual Rule Creation
+
 Create custom rule classes that implement the rule interface:
 
 ```php
@@ -433,17 +484,75 @@ class UserPermissionRule implements WorkflowRuleContract
 }
 ```
 
+#### Example Rule Implementations
+
+**User Permission Rule:**
+```php
+public function handle($model, WorkflowProcess $process, $user): bool
+{
+    if (!$user) {
+        return false;
+    }
+
+    // Only managers can approve
+    if ($process->to_status === 'approved') {
+        return $user->hasRole('manager');
+    }
+
+    return true;
+}
+```
+
+**Model State Rule:**
+```php
+public function handle($model, WorkflowProcess $process, $user): bool
+{
+    // Check if model is ready for transition
+    if ($process->to_status === 'published' && !$model->is_complete) {
+        return false;
+    }
+
+    return true;
+}
+```
+
+**Time-based Rule:**
+```php
+public function handle($model, WorkflowProcess $process, $user): bool
+{
+    // Only allow transitions during business hours
+    if ($process->to_status === 'live') {
+        $hour = now()->hour;
+        return $hour >= 9 && $hour <= 17;
+    }
+
+    return true;
+}
+```
+
+#### Attaching Rules to Processes
+
+```php
+#### Attaching Rules to Processes
+
 Create and assign rules to processes:
 
 ```php
-// Create rule
+use WorkflowStateMachine\Models\WorkflowProcess;
+use WorkflowStateMachine\Models\WorkflowRule;
+
+// Create rule (or use the one created by the artisan command)
 $rule = WorkflowRule::create([
     'name' => 'check_user_permission',
     'description' => 'Check if user has permission to change status',
-    'rule_class' => 'App\WorkflowRules\UserPermissionRule',
+    'rule_class' => 'App\\Rules\\UserPermissionRule',
 ]);
 
+// Or find an existing rule created by the command
+$rule = WorkflowRule::where('rule_class', 'App\\Rules\\CustomRule')->first();
+
 // Assign rule to process
+$process = WorkflowProcess::find(1);
 $process->rules()->attach($rule);
 ```
 

@@ -45,18 +45,16 @@ class WorkflowModelObserver
         }
 
         // Check for auto-transition after model update
-        if (\config('workflow-state-machine.enable_auto_transition', true)) {
-            $delay = \config('workflow-state-machine.auto_transition_delay', 0);
+        $delay = \config('workflow-state-machine.auto_transition_delay', 0);
 
-            if ($delay > 0) {
-                // Dispatch delayed event
-                \dispatch(function () use ($model) {
-                    $model->checkAutoTransition();
-                })->delay(now()->addSeconds($delay));
-            } else {
-                // Immediate check
+        if ($delay > 0) {
+            // Dispatch delayed event
+            \dispatch(function () use ($model) {
                 $model->checkAutoTransition();
-            }
+            })->delay(now()->addSeconds($delay));
+        } else {
+            // Immediate check
+            $model->checkAutoTransition();
         }
     }
 }

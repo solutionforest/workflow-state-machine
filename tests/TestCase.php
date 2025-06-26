@@ -52,13 +52,9 @@ class TestCase extends Orchestra
             'morph_name' => 'workflowable',
             'enable_audit_log' => true,
             'enable_rollback' => true,
-            'enable_auto_transition' => true,
+            'enable_auto_transition' => true, // Enable for testing
             'auto_transition_delay' => 0,
             'auto_create_processes' => false,
-            'events' => [
-                'auto_check_on_model_update' => true,
-                'auto_check_on_relation_update' => false,
-            ],
         ]);
     }
 }
