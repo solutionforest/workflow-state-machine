@@ -95,6 +95,20 @@ trait HasWorkflowStates
     }
 
     /**
+     * Check if auto-transition is enabled for this model
+     */
+    public function isAutoTransitionEnabled(): bool
+    {
+        // Check if model has custom auto-transition setting defined
+        if (property_exists($this, 'enable_auto_transition')) {
+            return (bool) $this->enable_auto_transition;
+        }
+
+        // Fallback to config default
+        return (bool) (function_exists('config') ? config('workflow-state-machine.enable_auto_transition', false) : false);
+    }
+
+    /**
      * Get the status array for this model
      */
     public function getStatusArray(): array
@@ -201,6 +215,11 @@ trait HasWorkflowStates
     public function checkAutoTransition($user = null): bool
     {
         $user = $this->resolveUser($user);
+
+        // Check if auto-transition is enabled for this model
+        if (! $this->isAutoTransitionEnabled()) {
+            return false;
+        }
 
         if (! $this->workflow) {
             return false;

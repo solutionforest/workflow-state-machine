@@ -43,9 +43,7 @@ class WorkflowStateMachineServiceProvider extends ServiceProvider
             Event::listen('eloquent.created: *', [WorkflowModelObserver::class, 'created']);
         }
 
-        // Register updated listener only if auto-transition is enabled
-        if (config('workflow-state-machine.enable_auto_transition', false)) {
-            Event::listen('eloquent.updated: *', [WorkflowModelObserver::class, 'updated']);
-        }
+        // Always register updated listener - the auto-transition check will be done at model level
+        Event::listen('eloquent.updated: *', [WorkflowModelObserver::class, 'updated']);
     }
 }

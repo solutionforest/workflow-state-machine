@@ -44,6 +44,11 @@ class WorkflowModelObserver
             return;
         }
 
+        // Skip if auto-transition is not enabled for this model
+        if (! $model->isAutoTransitionEnabled()) {
+            return;
+        }
+
         // Check for auto-transition after model update
         $delay = \config('workflow-state-machine.auto_transition_delay', 0);
 

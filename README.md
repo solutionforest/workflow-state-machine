@@ -716,6 +716,65 @@ return [
 ];
 ```
 
+### Model-Level Auto Transition Control
+
+Similar to custom status columns and arrays, you can control auto-transition behavior at the model level, allowing different models to have different auto-transition settings:
+
+#### Enable auto-transition for specific models
+
+```php
+use WorkflowStateMachine\Traits\HasWorkflowStates;
+
+class CriticalTask extends Model
+{
+    use HasWorkflowStates;
+    
+    // Enable auto-transition for this model specifically
+    protected $enable_auto_transition = true;
+}
+
+class ManualReviewTask extends Model
+{
+    use HasWorkflowStates;
+    
+    // Disable auto-transition for this model (requires manual approval)
+    protected $enable_auto_transition = false;
+}
+```
+
+#### Fallback behavior
+
+- **Model-level setting** → **Global config setting** → **false (default)**
+
+```php
+// Global config setting
+'enable_auto_transition' => false,
+
+// This model will auto-transition despite global setting being disabled
+class AutomatedProcess extends Model
+{
+    use HasWorkflowStates;
+    
+    protected $enable_auto_transition = true; // Overrides global config
+}
+
+// This model uses the global config setting (false in this case)
+class StandardTask extends Model
+{
+    use HasWorkflowStates;
+    // No $enable_auto_transition property, so uses global config
+}
+```
+
+#### Auto-transition logic
+
+Auto-transitions will only occur when:
+1. `enable_auto_transition` is `true` (either at model level or global config)
+2. The model has a workflow assigned
+3. There is a next status available in the workflow
+4. The next process has `auto_transition` set to `true`
+5. All workflow rules pass for the transition
+
 ### Sample Rule Classes
 
 Here are some example rule classes you can create:
