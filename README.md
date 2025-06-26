@@ -775,6 +775,24 @@ Auto-transitions will only occur when:
 4. The next process has `auto_transition` set to `true`
 5. All workflow rules pass for the transition
 
+#### Auto-generated WorkflowProcess settings
+
+When workflows and processes are auto-generated, the `auto_transition` field on each `WorkflowProcess` will be set based on the model's auto-transition setting:
+
+```php
+// Model with auto-transition enabled
+class AutomatedTask extends Model
+{
+    use HasWorkflowStates;
+    protected $enable_auto_transition = true;
+}
+
+// When workflows are auto-generated for this model,
+// all WorkflowProcess records will have auto_transition = true
+```
+
+This ensures consistency between the model's auto-transition preference and the individual process settings.
+
 ### Sample Rule Classes
 
 Here are some example rule classes you can create:

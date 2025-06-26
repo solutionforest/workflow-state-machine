@@ -21,21 +21,33 @@ class CreateWorkflowProcesses
             return;
         }
 
-        // Get status array from the workflowable model if available, otherwise use config
+        // Get status array and auto-transition setting from the workflowable model if available, otherwise use config
         $statuses = [];
+        $autoTransition = null; // Use null to indicate no model-level setting found
         if ($workflow->workflowable_type && $workflow->workflowable_id) {
             $modelClass = $workflow->workflowable_type;
             if (class_exists($modelClass)) {
                 $model = $modelClass::find($workflow->workflowable_id);
-                if ($model && method_exists($model, 'getStatusArray')) {
-                    $statuses = $model->getStatusArray();
+                if ($model) {
+                    if (method_exists($model, 'getStatusArray')) {
+                        $statuses = $model->getStatusArray();
+                    }
+                    // Get auto-transition setting from model
+                    if (method_exists($model, 'isAutoTransitionEnabled')) {
+                        $autoTransition = $model->isAutoTransitionEnabled();
+                    }
                 }
             }
         }
 
-        // Fallback to config if no model-specific status array found
+        // Fallback to config if no model-specific status array or auto-transition setting found
         if (empty($statuses)) {
             $statuses = \config('workflow-state-machine.status', []);
+        }
+        
+        // If model doesn't have auto-transition setting, fallback to config
+        if ($autoTransition === null) {
+            $autoTransition = \config('workflow-state-machine.enable_auto_transition', false);
         }
 
         $excludedStatuses = ['rejected', 'cancelled'];
@@ -64,7 +76,7 @@ class CreateWorkflowProcesses
                 'from_status' => $fromStatus,
                 'to_status' => $toStatus,
                 'order' => $order++,
-                'auto_transition' => false,
+                'auto_transition' => $autoTransition,
                 'completed' => false,
                 'description' => "Auto-generated process for {$fromStatus} to {$toStatus} transition",
             ]);
