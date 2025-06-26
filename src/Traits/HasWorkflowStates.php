@@ -26,6 +26,42 @@ trait HasWorkflowStates
     }
 
     /**
+     * Get the status attribute using the dynamic status column name
+     * This allows models to use custom status column names while still accessing via 'status'
+     */
+    public function getStatusAttribute(): ?string
+    {
+        $statusColumn = $this->getStatusColumnName();
+
+        // If the status column is 'status', return the raw attribute to avoid recursion
+        if ($statusColumn === 'status') {
+            return $this->attributes['status'] ?? null;
+        }
+
+        // For custom status columns, get the attribute value
+        return $this->getAttribute($statusColumn);
+    }
+
+    /**
+     * Set the status attribute using the dynamic status column name
+     * This allows models to use custom status column names while still setting via 'status'
+     */
+    public function setStatusAttribute($value): void
+    {
+        $statusColumn = $this->getStatusColumnName();
+
+        // If the status column is 'status', set the raw attribute to avoid recursion
+        if ($statusColumn === 'status') {
+            $this->attributes['status'] = $value;
+
+            return;
+        }
+
+        // For custom status columns, set the attribute value
+        $this->setAttribute($statusColumn, $value);
+    }
+
+    /**
      * Get the current status of the model
      */
     public function getCurrentStatus(): ?string

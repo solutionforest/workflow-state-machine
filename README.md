@@ -149,6 +149,33 @@ return [
 
 **Note:** Model-level `$status_column` property takes precedence over the global config setting.
 
+#### Status Attribute Accessor
+
+The `HasWorkflowStates` trait provides a dynamic `status` attribute accessor that automatically uses your configured status column. This means you can always access the status via `$model->status`, regardless of the actual database column name:
+
+```php
+class Order extends Model
+{
+    use HasWorkflowStates;
+    
+    protected $status_column = 'order_state'; // Custom column name
+}
+
+// You can always access status via the 'status' attribute
+$order = Order::find(1);
+echo $order->status; // Returns value from 'order_state' column
+
+// Setting status also works dynamically
+$order->status = 'approved'; // Sets the 'order_state' column
+$order->save();
+
+// Or use the explicit methods
+echo $order->getCurrentStatus(); // Same as $order->status
+$order->setStatus('completed');  // Same as $order->status = 'completed'
+```
+
+This accessor provides a consistent interface while allowing flexible database schema design.
+
 ### Custom Status Array
 
 You can also define custom status arrays at the model level, allowing different models to have different workflow statuses:
