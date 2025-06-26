@@ -230,6 +230,25 @@ trait HasWorkflowStates
         return $this->canTransitionTo($nextStatus, $user);
     }
 
+    /**
+     * Proceed to the next state in the workflow
+     * This is a convenience method that combines checking and transitioning
+     */
+    public function proceedToNextState($user = null, ?string $notes = null): bool
+    {
+        $nextStatus = $this->getNextStatus();
+
+        if (! $nextStatus) {
+            return false;
+        }
+
+        if (! $this->canProceedToNextStep($user)) {
+            return false;
+        }
+
+        return $this->transitionTo($nextStatus, $user, $notes);
+    }
+
     public function getWorkflowProgress(): array
     {
         if (! $this->workflow) {
