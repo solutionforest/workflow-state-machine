@@ -264,7 +264,7 @@ trait HasWorkflowStates
     public function canProceedToNextStep($user = null): bool
     {
         $user = $this->resolveUser($user);
-        
+
         $nextStatus = $this->getNextStatus();
 
         if (! $nextStatus) {
@@ -281,7 +281,7 @@ trait HasWorkflowStates
     public function proceedToNextState($user = null, ?string $notes = null): bool
     {
         $user = $this->resolveUser($user);
-        
+
         $nextStatus = $this->getNextStatus();
 
         if (! $nextStatus) {
@@ -316,7 +316,7 @@ trait HasWorkflowStates
     public function rollbackToPreviousState($user = null): bool
     {
         $user = $this->resolveUser($user);
-        
+
         $previousStatus = $this->getPreviousStatus();
 
         if (! $previousStatus) {
@@ -329,7 +329,7 @@ trait HasWorkflowStates
     public function rollbackToState(string $toStatus, $user = null): bool
     {
         $user = $this->resolveUser($user);
-        
+
         $enableRollback = function_exists('config') ? config('workflow-state-machine.enable_rollback', true) : true;
         if (! $enableRollback) {
             return false;
@@ -364,7 +364,7 @@ trait HasWorkflowStates
     public function getAvailableTransitions($user = null): array
     {
         $user = $this->resolveUser($user);
-        
+
         if (! $this->workflow) {
             return [];
         }

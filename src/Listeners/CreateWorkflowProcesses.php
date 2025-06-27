@@ -44,7 +44,7 @@ class CreateWorkflowProcesses
         if (empty($statuses)) {
             $statuses = \config('workflow-state-machine.status', []);
         }
-        
+
         // If model doesn't have auto-transition setting, fallback to config
         if ($autoTransition === null) {
             $autoTransition = \config('workflow-state-machine.enable_auto_transition', false);

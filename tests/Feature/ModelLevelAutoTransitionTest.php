@@ -10,6 +10,7 @@ use WorkflowStateMachine\Models\WorkflowProcess;
 class TestModelWithAutoTransition extends TestModel
 {
     protected $enable_auto_transition = true;
+
     protected $table = 'test_models';
 }
 
@@ -17,6 +18,7 @@ class TestModelWithAutoTransition extends TestModel
 class TestModelWithoutAutoTransition extends TestModel
 {
     protected $enable_auto_transition = false;
+
     protected $table = 'test_models';
 }
 
