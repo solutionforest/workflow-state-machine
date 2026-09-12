@@ -54,7 +54,7 @@ jobs:
         composer update --no-progress --prefer-dist --prefer-stable --optimize-autoloader
 
     - name: Show installed versions
-      run: composer show laravel/framework orchestra/testbench pestphp/pest
+      run: composer show --direct
 
     - name: Check Pest binary
       run: ls -la ./vendor/bin/pest && ./vendor/bin/pest --version
