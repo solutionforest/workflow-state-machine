@@ -11,3 +11,8 @@
 /.phpunit.result.cache
 /composer.phar
 /auth.json
+
+# A library resolves against the consuming application, so the lock is not
+# committed: pinning it here made CI install one set of dependencies for every
+# cell of the Laravel matrix.
+/composer.lock

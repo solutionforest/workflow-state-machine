@@ -13,7 +13,11 @@ jobs:
     strategy:
       matrix:
         php-versions: ['8.2', '8.3', '8.4']
-        laravel-versions: ['11.0', '12.0']
+        laravel-versions: ['12.0', '13.0']
+        exclude:
+          # Laravel 13 requires PHP 8.3 or newer.
+          - php-versions: '8.2'
+            laravel-versions: '13.0'
 
     name: PHP ${{ matrix.php-versions }} - Laravel ${{ matrix.laravel-versions }}
 
@@ -31,22 +35,26 @@ jobs:
       id: composer-cache
       run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-    - name: Cache composer dependencies
+    # Keyed on the matrix cell as well as composer.json: without a lock file
+    # every cell would otherwise share one key and restore another cell's
+    # dependencies. The vendor directory itself is deliberately not cached for
+    # the same reason.
+    - name: Cache composer downloads
       uses: actions/cache@v4
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-        restore-keys: ${{ runner.os }}-composer-
+        key: ${{ runner.os }}-composer-php${{ matrix.php-versions }}-laravel${{ matrix.laravel-versions }}-${{ hashFiles('composer.json') }}
+        restore-keys: ${{ runner.os }}-composer-php${{ matrix.php-versions }}-laravel${{ matrix.laravel-versions }}-
 
-    - name: Cache vendor directory
-      uses: actions/cache@v4
-      with:
-        path: vendor
-        key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
-        restore-keys: ${{ runner.os }}-vendor-
-
+    # Resolve against the matrix rather than a lock file, so the Laravel version
+    # in the job name is the one actually installed.
     - name: Install Composer dependencies
-      run: composer install --no-progress --prefer-dist --optimize-autoloader
+      run: |
+        composer require "laravel/framework:^${{ matrix.laravel-versions }}" --no-interaction --no-update
+        composer update --no-progress --prefer-dist --prefer-stable --optimize-autoloader
+
+    - name: Show installed versions
+      run: composer show --direct
 
     - name: Check Pest binary
       run: ls -la ./vendor/bin/pest && ./vendor/bin/pest --version
@@ -58,4 +66,4 @@ jobs:
       run: ./vendor/bin/pint --test
 
     - name: Run PHPStan
-      run: ./vendor/bin/phpstan analyse --no-progress --memory-limit=256M
+      run: ./vendor/bin/phpstan analyse --no-progress --memory-limit=1G
