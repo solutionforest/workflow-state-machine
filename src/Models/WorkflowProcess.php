@@ -2,9 +2,11 @@
 
 namespace WorkflowStateMachine\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -16,9 +18,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property bool $auto_transition
  * @property bool $completed
  * @property string|null $description
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Database\Eloquent\Collection|\WorkflowStateMachine\Models\WorkflowRule[] $rules
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Collection|WorkflowRule[] $rules
  */
 class WorkflowProcess extends Model
 {

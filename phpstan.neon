@@ -9,3 +9,8 @@ parameters:
     ignoreErrors:
         -
             identifier: missingType.iterableValue
+        # These traits are the package's public API: they are used by the
+        # applications that install it, not from within src. PHPStan 2 reports
+        # a trait it cannot see used, which here is expected.
+        -
+            identifier: trait.unused
